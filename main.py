@@ -2,7 +2,12 @@ from datetime import date, datetime, timedelta
 
 
 def get_birthdays_per_week(users):
-    result = {"Monday": [], "Tuesday": [], "Wednesday": [], "Thursday": [], "Friday": []}
+    result = {"Monday": [],
+              "Tuesday": [],
+              "Wednesday": [],
+              "Thursday": [],
+              "Friday": []
+              }
     today = date.today()
     yesterday = today - timedelta(days=1)
     b_yesterday = today - timedelta(days=2)
@@ -14,25 +19,29 @@ def get_birthdays_per_week(users):
         for person in users:
             person["birthday"] = person["birthday"].replace(year=today.year)
             birthday = person["birthday"].strftime('%A')
+            first_name = person["name"].split()[0]
             if today.strftime('%A') == "Monday":
-                if person['birthday'] == yesterday or person["birthday"] == b_yesterday:
-                    result["Monday"].append(person["name"].split()[0])
+                if person['birthday'] == yesterday\
+                        or person["birthday"] == b_yesterday:
+                    result["Monday"].append(first_name)
                     continue
             if today <= person["birthday"] <= today + week:
                 if birthday == "Saturday" or birthday == "Sunday":
-                    result["Monday"].append(person["name"].split()[0])
+                    result["Monday"].append(first_name)
                 else:
-                    result[birthday].append(person["name"].split()[0])
+                    result[birthday].append(first_name)
             # if new year
             else:
                 if (today + week).year == today.year + 1:
-                    person["birthday"] = person["birthday"].replace(year=today.year + 1)
+                    person["birthday"] = person["birthday"]\
+                        .replace(year=today.year + 1)
                     new_year_birthday = person["birthday"].strftime('%A')
                     if today <= person["birthday"] <= today + week:
-                        if new_year_birthday == "Saturday" or new_year_birthday == "Sunday":
-                            result["Monday"].append(person["name"].split()[0])
+                        if new_year_birthday == "Saturday"\
+                                or new_year_birthday == "Sunday":
+                            result["Monday"].append(first_name)
                         else:
-                            result[new_year_birthday].append(person["name"].split()[0])
+                            result[new_year_birthday].append(first_name)
                 continue
 
     clear_result = {key: value for key, value in result.items() if value}
